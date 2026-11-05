@@ -17,3 +17,5 @@ class datos_operacion(BaseModel):
 @app.post("/api/calcular_t_student")
 def calcular():
     #aqui comenzamos a procesar los calculos de la operacion y talfi
+    xd = 0
+    #vamos a crear este avance solo por el commit
