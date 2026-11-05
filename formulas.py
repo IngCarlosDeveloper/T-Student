@@ -40,7 +40,7 @@ def calcular_x_media(array_muestras):
 
     for i in array_muestras:
         #sumamos cada termino del array
-        media_aritmetica +=  i
+        media_aritmetica +=  float(i)
 
     #dividimos entre la longitud del arry
     media_aritmetica = media_aritmetica / len(array_muestras)
@@ -55,7 +55,7 @@ def calcular_s(array_muestras, media_aritmetica):
     #bucle para calcular Sum(Xi-Xmedio)**2
     for i in array_muestras:
 
-        sumatoria += (i - media_aritmetica)**2
+        sumatoria += (float(i) - media_aritmetica)**2
 
     s_desviacion_estandar = math.sqrt(sumatoria / (len(array_muestras) - 1))
     return(s_desviacion_estandar)
@@ -66,11 +66,14 @@ def grados_libertad(array_muestras):
     return grados_libertad
 
 #Esta funcion pasa de Nivel de confianza -> significancia
-def calcular_significancia(nivel_confianza):
-    ################################################################################
-     #OJITO CON EL *2
-     ###############################################################################
-    significancia = round( ((1 - nivel_confianza)*2), 8 )
+# 0 = 1 cola
+# 1 = 2 colas
+def calcular_significancia(nivel_confianza, tipo_cola):
+    significancia = round( ((1 - nivel_confianza)), 8 )
+
+    if(tipo_cola == "0"):
+        significancia = significancia * 2
+
     return significancia
 
 def t_student(array_muestra, media_arit, u_media_hipotesis, s_desv_estandar):
@@ -83,25 +86,25 @@ def t_student(array_muestra, media_arit, u_media_hipotesis, s_desv_estandar):
 
 
 
-media = calcular_x_media(x)
-print("media aritmetica: " + str(media))
-s = calcular_s(x, media)
-print("desviacion standar: " + str(s))
-u = 0.02
+# media = calcular_x_media(x)
+# print("media aritmetica: " + str(media))
+# s = calcular_s(x, media)
+# print("desviacion standar: " + str(s))
+# u = 0.02
 
-g = grados_libertad(x)
-significancia = calcular_significancia(0.99)
+# # g = grados_libertad(x)
+# # significancia = calcular_significancia(0.99)
 
-print("signigicancia: " + str(significancia))
+# # print("signigicancia: " + str(significancia))
 
-resultado_tabla = tabla_prueba.encontrar_valor_tabla(g, significancia)
+# # resultado_tabla = tabla_prueba.encontrar_valor_tabla(g, significancia)
 
 
-respuesta = t_student(x, media, u, s)
+# respuesta = t_student(x, media, u, s)
 
-print("Respuesta T-student: " + str(respuesta))
+# print("Respuesta T-student: " + str(respuesta))
 
-print("Resultado tabla estadistica: " + str(resultado_tabla))
+# # print("Resultado tabla estadistica: " + str(resultado_tabla))
 
 
     

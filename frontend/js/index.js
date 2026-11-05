@@ -8,29 +8,6 @@ function revisar_cant_x() {
   });
 }
 
-function agregar_x_media() {
-  //Declaramos el check para ingresar el promedio
-  let check_promedio = document.getElementById("xmedia");
-
-  let div_cant_x = document.getElementById("div_cant_x");
-  let divPadre = document.getElementById("div1");
-
-  //Monitoreamos si clickean el check
-  check_promedio.addEventListener("click", () => {
-    if (check_promedio.checked) {
-      divPadre.innerHTML = "";
-
-      div_cant_x.innerHTML = `<label for='cant_x'>Ingrese el X Medio:</label>
-        <input type='number' class='input_cant_x' id='x1'>
-        <br><br>`;
-    } else {
-      div_cant_x.innerHTML = `<label for='cant_x'>Ingrese el numero de variables X que quiere evaluar:</label><input type='number' id='cant_x'><br><br>`;
-
-      revisar_cant_x();
-    }
-  });
-}
-
 //Crea los inputs para escribir N cantidad de X
 function crear_Xn(cant_x_muestras) {
   let i = 1;
@@ -77,12 +54,14 @@ async function preparar_datos() {
   let u_hipotesis = document.getElementById("u_hipotesis");
   let confianza = document.getElementById("confianza");
   let significancia = document.getElementById("significancia");
+  let tipo_cola = document.getElementById("cola");
 
   let datos_form = {
     array_x_media: valores_x_input,
     hipotesis_u: u_hipotesis.value,
     confianza: confianza.value,
     significancia: significancia.value,
+    cola: tipo_cola.value,
   };
 
   console.log(datos_form);
@@ -117,12 +96,36 @@ function trigger_btn() {
   });
 }
 
+//si escribes confianza, no anotas significancia
+function monitorear_confianza_significancia() {
+  let confianza = document.getElementById("confianza");
+  let significancia = document.getElementById("significancia");
+
+  confianza.addEventListener("input", () => {
+    if (confianza.value != "") {
+      significancia.value = 0;
+      significancia.disabled = true;
+    } else {
+      significancia.disabled = false;
+    }
+  });
+
+  significancia.addEventListener("input", () => {
+    if (significancia.value != "") {
+      confianza.value = 0;
+      confianza.disabled = true;
+    } else {
+      confianza.disabled = false;
+    }
+  });
+}
+
 //let contenedor = 10;
 //crear_Xn(contenedor);
 
 revisar_cant_x();
+monitorear_confianza_significancia();
 
 trigger_btn();
 console.log("perico");
 preparar_datos();
-agregar_x_media();
