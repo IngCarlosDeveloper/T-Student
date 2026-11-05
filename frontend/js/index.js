@@ -89,3 +89,14 @@ revisar_cant_x();
 trigger_btn();
 console.log("perico");
 preparar_datos();
+
+let check_promedio = document.getElementById("xmedia");
+console.log(check_promedio);
+
+let tmp = check_promedio.checkVisibility;
+
+if (tmp) {
+  alert("holaaa mundo");
+  console.log("si entramos");
+  console.log(tmp);
+}
