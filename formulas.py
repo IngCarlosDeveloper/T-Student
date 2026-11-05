@@ -34,55 +34,69 @@ x = [0.021, 0.019, 0.023, 0.020]
 
 #print(t_student)
 
-def calcular_x_media(array_muestras):
+def calcular_x_media(arrayMuestras):
 
-    media_aritmetica = 0
+    mediaAritmetica = 0
 
-    for i in array_muestras:
+    for i in arrayMuestras:
         #sumamos cada termino del array
-        media_aritmetica +=  float(i)
+        mediaAritmetica +=  float(i)
 
     #dividimos entre la longitud del arry
-    media_aritmetica = media_aritmetica / len(array_muestras)
+    mediaAritmetica = mediaAritmetica / len(arrayMuestras)
 
-    return media_aritmetica
+    return mediaAritmetica
 
 #calcular desviacion estandar
-def calcular_s(array_muestras, media_aritmetica):
+def calcular_s(arrayMuestras, mediaAritmetica):
 
     sumatoria = 0
 
     #bucle para calcular Sum(Xi-Xmedio)**2
-    for i in array_muestras:
+    for i in arrayMuestras:
 
-        sumatoria += (float(i) - media_aritmetica)**2
+        sumatoria += (float(i) - mediaAritmetica)**2
 
-    s_desviacion_estandar = math.sqrt(sumatoria / (len(array_muestras) - 1))
-    return(s_desviacion_estandar)
+    sDesviacionEstandar = math.sqrt(sumatoria / (len(arrayMuestras) - 1))
+    return(sDesviacionEstandar)
 
-def grados_libertad(array_muestras):
+def grados_libertad(arrayMuestras):
 
-    grados_libertad = len(array_muestras) - 1
-    return grados_libertad
+    gradosLibertad = len(arrayMuestras) - 1
+    return gradosLibertad
 
 #Esta funcion pasa de Nivel de confianza -> significancia
 # 0 = 1 cola
 # 1 = 2 colas
-def calcular_significancia(nivel_confianza, tipo_cola):
-    significancia = round( ((1 - nivel_confianza)), 8 )
+def calcular_significancia(nivelConfianza, tipoCola):
+    significancia = round( ((1 - nivelConfianza)), 8 )
 
-    if(tipo_cola == "0"):
-        significancia = significancia * 2
+    #el ajuste de la cola se hace en una funcion aparte
+    #para poder usarlo tambien cuando escriben la significancia a mano
+    significancia = ajustar_significancia_por_cola(significancia, tipoCola)
 
     return significancia
 
-def t_student(array_muestra, media_arit, u_media_hipotesis, s_desv_estandar):
+#la tabla que tenemos es de 2 colas, entonces si el ejercicio es de 1 cola
+#hay que duplicar la significancia para buscar en la columna correcta
+# 0 = 1 cola
+# 1 = 2 colas
+def ajustar_significancia_por_cola(significancia, tipoCola):
+
+    #la cola llega como texto ("0" o "1") desde el formulario
+    if(tipoCola == "0"):
+        #round para evitar errores de decimales (ej: 0.1 + 0.1 en float)
+        significancia = round(significancia * 2, 8)
+
+    return significancia
+
+def t_student(arrayMuestra, mediaArit, uMediaHipotesis, sDesvEstandar):
 
     #OJITO CON EL VALOR ABSOLUTO
     #t_stu = abs(media_arit - u_media_hipotesis) / ( s_desv_estandar / math.sqrt(len(array_muestra) - 1))
-    t_stu = (media_arit - u_media_hipotesis) / ( s_desv_estandar / math.sqrt(len(array_muestra)))
+    tStu = (mediaArit - uMediaHipotesis) / ( sDesvEstandar / math.sqrt(len(arrayMuestra)))
 
-    return(t_stu)
+    return(tStu)
 
 
 

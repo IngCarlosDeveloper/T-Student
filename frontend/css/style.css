@@ -1,0 +1,115 @@
+/* ------------------------------ GENERAL ------------------------------ */
+
+body {
+  font-family: Arial, sans-serif;
+  color: #222222;
+  background: #f4f4f4;
+  max-width: 650px;
+  margin: 30px auto;
+  padding: 0 15px;
+}
+
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 5px;
+}
+
+h2 {
+  font-size: 1rem;
+  font-weight: normal;
+  color: #555555;
+}
+
+/* ------------------------------ FORMULARIO ------------------------------ */
+
+#formulario {
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  padding: 20px;
+}
+
+label {
+  display: inline-block;
+  margin: 6px 0 3px 0;
+}
+
+input,
+select {
+  padding: 6px;
+  margin: 3px 6px 3px 0;
+  font-size: 1rem;
+  border: 1px solid #999999;
+}
+
+input:focus,
+select:focus {
+  outline: 2px solid #2b6cb0;
+}
+
+input:disabled {
+  background: #e6e6e6;
+}
+
+/* ------------------------------ INPUTS Xn (los crea el JS) ------------------------------ */
+
+#div1 {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 10px;
+  align-items: center;
+}
+
+/* los <br> sobran porque ya usamos grid */
+.br_input_x {
+  display: none;
+}
+
+/* ------------------------------ BOTON ------------------------------ */
+
+button {
+  padding: 8px 24px;
+  font-size: 1rem;
+  color: #ffffff;
+  background: #2b6cb0;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #22558c;
+}
+
+/* ------------------------------ RESULTADOS ------------------------------ */
+
+#resultado {
+  margin-top: 20px;
+}
+
+#resultado p {
+  margin: 0;
+  padding: 8px 12px;
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  border-bottom: none;
+}
+
+#resultado p:last-child {
+  border-bottom: 1px solid #cccccc;
+}
+
+/* la conclusion solo cambia de color: verde si no se rechaza H0, rojo si se rechaza */
+#resultado p.conclusion {
+  font-weight: bold;
+  margin-top: 10px;
+  border-bottom: 1px solid #cccccc;
+}
+
+#resultado p.rechaza {
+  color: #9b1c1c;
+  border-left: 5px solid #9b1c1c;
+}
+
+#resultado p.no_rechaza {
+  color: #1c6b2f;
+  border-left: 5px solid #1c6b2f;
+}

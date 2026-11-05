@@ -1,15 +1,15 @@
 function revisar_cant_x() {
-  let input_cant_X = document.getElementById("cant_x");
+  let inputCantX = document.getElementById("cant_x");
 
-  input_cant_X.addEventListener("input", () => {
-    let cantidad_x = input_cant_X.value;
+  inputCantX.addEventListener("input", () => {
+    let cantidadX = inputCantX.value;
 
-    crear_Xn(cantidad_x);
+    crear_Xn(cantidadX);
   });
 }
 
 //Crea los inputs para escribir N cantidad de X
-function crear_Xn(cant_x_muestras) {
+function crear_Xn(cantXMuestras) {
   let i = 1;
 
   //DECLARAMOS DIV CONTENEDOR
@@ -18,7 +18,7 @@ function crear_Xn(cant_x_muestras) {
   //LIMPIAMOS
   divPadre.innerHTML = "";
 
-  while (i <= cant_x_muestras) {
+  while (i <= cantXMuestras) {
     //CREACION DEL LABEL
     let newLabel = document.createElement("label");
     newLabel.textContent = "Ingrese X" + i + ":";
@@ -29,6 +29,10 @@ function crear_Xn(cant_x_muestras) {
     let newInput = document.createElement("input");
     newInput.setAttribute("id", "x" + i);
     newInput.setAttribute("class", "input_cant_x");
+    //number con step any para aceptar decimales, y required para que no se pueda enviar vacio
+    newInput.setAttribute("type", "number");
+    newInput.setAttribute("step", "any");
+    newInput.setAttribute("required", "");
 
     let newBr = document.createElement("br");
     newBr.setAttribute("class", "br_input_x");
@@ -44,27 +48,27 @@ function crear_Xn(cant_x_muestras) {
 
 async function preparar_datos() {
   //leemos todos los inputs Xn
-  let inputs_x = document.querySelectorAll(".input_cant_x");
+  let inputsX = document.querySelectorAll(".input_cant_x");
 
-  console.log(inputs_x);
+  console.log(inputsX);
 
-  let valores_x_input = Array.from(inputs_x).map((input) => input.value);
-  console.log(valores_x_input);
+  let valoresXInput = Array.from(inputsX).map((input) => input.value);
+  console.log(valoresXInput);
 
-  let u_hipotesis = document.getElementById("u_hipotesis");
+  let uHipotesis = document.getElementById("u_hipotesis");
   let confianza = document.getElementById("confianza");
   let significancia = document.getElementById("significancia");
-  let tipo_cola = document.getElementById("cola");
+  let tipoCola = document.getElementById("cola");
 
-  let datos_form = {
-    array_x_media: valores_x_input,
-    hipotesis_u: u_hipotesis.value,
+  let datosForm = {
+    arrayXMedia: valoresXInput,
+    hipotesisU: uHipotesis.value,
     confianza: confianza.value,
     significancia: significancia.value,
-    cola: tipo_cola.value,
+    cola: tipoCola.value,
   };
 
-  console.log(datos_form);
+  console.log(datosForm);
 
   try {
     //enviar respuesta a python
@@ -74,24 +78,68 @@ async function preparar_datos() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(datos_form),
+      body: JSON.stringify(datosForm),
     });
 
+    //leemos lo que responde python
+    let datosRespuesta = await respuesta.json();
+
     if (!respuesta.ok) {
-      throw new Error("Error al procesar los datos");
+      //si python mando un mensaje de error (detail) lo usamos
+      throw new Error(datosRespuesta.detail);
     }
+
+    mostrar_resultado(datosRespuesta);
   } catch (error) {
-    //resultado.textContent = error.message;
+    document.getElementById("resultado").textContent = "Error: " + error.message;
     alert("algo fallo amiguito");
   }
 }
 
-function trigger_btn() {
-  //Declaramos btn del html
-  btn_calcular = document.getElementById("btn_calcular");
+//Escribe en pantalla los resultados que devolvio python
+function mostrar_resultado(datosRespuesta) {
+  let divResultado = document.getElementById("resultado");
 
-  //Declaramos listener para click
-  btn_calcular.addEventListener("click", async () => {
+  //LIMPIAMOS
+  divResultado.innerHTML = "";
+
+  let lineas = [
+    "Cantidad de muestras (n): " + datosRespuesta.n,
+    "X media: " + datosRespuesta.xMedia,
+    "Desviacion estandar (S): " + datosRespuesta.desviacionS,
+    "Grados de libertad: " + datosRespuesta.gradosLibertad,
+    "Significancia usada en la tabla (2 colas): " + datosRespuesta.significanciaTabla,
+    "T calculado: " + datosRespuesta.resultadoT,
+    "T de la tabla: " + datosRespuesta.resultadoTabla,
+    datosRespuesta.conclusion,
+  ];
+
+  //un parrafo por cada linea
+  for (let linea of lineas) {
+    let newP = document.createElement("p");
+    newP.textContent = linea;
+
+    //la conclusion lleva color: verde si no se rechaza H0, rojo si se rechaza
+    if (linea == datosRespuesta.conclusion) {
+      if (linea.includes("NO se rechaza")) {
+        newP.setAttribute("class", "conclusion no_rechaza");
+      } else {
+        newP.setAttribute("class", "conclusion rechaza");
+      }
+    }
+
+    divResultado.appendChild(newP);
+  }
+}
+
+function trigger_btn() {
+  //Declaramos el form del html
+  let formulario = document.getElementById("formulario");
+
+  //Declaramos listener para el submit (el navegador revisa los required antes de disparar este evento)
+  formulario.addEventListener("submit", async (evento) => {
+    //evitamos que el form recargue la pagina
+    evento.preventDefault();
     preparar_datos();
   });
 }
@@ -128,4 +176,7 @@ monitorear_confianza_significancia();
 
 trigger_btn();
 console.log("perico");
-preparar_datos();
+
+//esta llamada enviaba el formulario vacio apenas cargaba la pagina (daba error 422),
+//ahora solo se envia cuando se presiona el boton
+//preparar_datos();

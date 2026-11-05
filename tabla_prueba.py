@@ -1,4 +1,4 @@
-tabla_t_student_2_colas = {
+tablaTStudent2Colas = {
     0.5: [
         1.0000, 0.8165, 0.7649, 0.7407, 0.7267, 0.7176, 0.7111, 0.7064, 0.7027, 0.6998,
         0.6974, 0.6955, 0.6938, 0.6924, 0.6912, 0.6901, 0.6892, 0.6884, 0.6876, 0.6870,
@@ -93,13 +93,30 @@ tabla_t_student_2_colas = {
 
 def encontrar_valor_tabla(libertad, significancia):
 
-    libertad = libertad - 1 
+    #cada lista tiene 34 valores: los primeros 30 son los grados de libertad 1 a 30
+    #y los ultimos 4 son los grados 40, 60, 120 e infinito (posiciones 30 a 33)
+    if(libertad <= 30):
+        #del 1 al 30 la posicion es el grado menos 1
+        posicion = libertad - 1
+    elif(libertad < 40):
+        #31 a 39 no estan en la tabla, usamos el 30 (el menor mas cercano)
+        posicion = 29
+    elif(libertad < 60):
+        #40 a 59 usan el 40
+        posicion = 30
+    elif(libertad < 120):
+        #60 a 119 usan el 60
+        posicion = 31
+    else:
+        #120 o mas usan el 120
+        posicion = 32
 
-    tmp = tabla_t_student_2_colas[significancia][libertad]
-    return tmp
+    valorTabla = tablaTStudent2Colas[significancia][posicion]
+    return valorTabla
 
 
 
-resultado = encontrar_valor_tabla(27, 0.2)
+#pruebas que se hacian al importar (comentadas porque imprimian cada vez que arranca el servidor)
+#resultado = encontrar_valor_tabla(27, 0.2)
 
-print(resultado)
+#print(resultado)

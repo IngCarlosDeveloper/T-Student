@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calculadora T-Student</title>
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
     <h1>Calculadora de T-Student</h1>
@@ -12,11 +13,14 @@
       ejercicio de T-student
     </h2></p>
 
+    <!-- el form permite que el navegador revise los campos required al presionar Calcular -->
+    <form id="formulario">
+
     <div id="div_cant_x">
 
 
         <label for="cant_x">Ingrese el numero de variables X que quiere evaluar:</label>
-        <input type="number" id="cant_x">
+        <input type="number" id="cant_x" min="2" required>
         <br>
         <br>
 
@@ -28,16 +32,16 @@
 
         
         <br><br>
-        <label for="u">Ingrese el valor de la hipotesis (u):</label>
-        <input type="number" id="u_hipotesis">
+        <label for="u_hipotesis">Ingrese el valor de la hipotesis (u):</label>
+        <input type="number" id="u_hipotesis" step="any" required>
         <br>
         <br>
 
-        <label for="confianza">Ingrese el valor de confianza:</label>
-        <input type="number" id="confianza">
+        <label for="confianza">Ingrese el valor de confianza (%):</label>
+        <input type="number" id="confianza" step="any" min="0" max="100" placeholder="Ej: 95" required>
 
-        <label for="significancia">Ingrese el valor de significancia:</label>
-        <input type="number" id="significancia">
+        <label for="significancia">Ingrese el valor de significancia (%):</label>
+        <input type="number" id="significancia" step="any" min="0" max="100" placeholder="Ej: 5" required>
         <br>
         <br>
 
@@ -48,11 +52,16 @@
         </select>
         <br><br>
         
-        <button id="btn_calcular">Calcular</button>
+        <button type="submit" id="btn_calcular">Calcular</button>
 
         
 
     </div>
+
+    </form>
+
+    <!-- aqui se muestran los resultados que devuelve python -->
+    <div id="resultado"></div>
 
     <script src="js/index.js"></script>
   </body>
