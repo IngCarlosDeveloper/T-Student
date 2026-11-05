@@ -8,6 +8,29 @@ function revisar_cant_x() {
   });
 }
 
+function agregar_x_media() {
+  //Declaramos el check para ingresar el promedio
+  let check_promedio = document.getElementById("xmedia");
+
+  let div_cant_x = document.getElementById("div_cant_x");
+  let divPadre = document.getElementById("div1");
+
+  //Monitoreamos si clickean el check
+  check_promedio.addEventListener("click", () => {
+    if (check_promedio.checked) {
+      divPadre.innerHTML = "";
+
+      div_cant_x.innerHTML = `<label for='cant_x'>Ingrese el X Medio:</label>
+        <input type='number' class='input_cant_x' id='x1'>
+        <br><br>`;
+    } else {
+      div_cant_x.innerHTML = `<label for='cant_x'>Ingrese el numero de variables X que quiere evaluar:</label><input type='number' id='cant_x'><br><br>`;
+
+      revisar_cant_x();
+    }
+  });
+}
+
 //Crea los inputs para escribir N cantidad de X
 function crear_Xn(cant_x_muestras) {
   let i = 1;
@@ -42,12 +65,7 @@ function crear_Xn(cant_x_muestras) {
   }
 }
 
-function preparar_datos() {
-  // let X1 = document.getElementById("x1");
-  // let X2 = document.getElementById("x2");
-  // let X3 = document.getElementById("x3");
-  // let X4 = document.getElementById("x4");
-
+async function preparar_datos() {
   //leemos todos los inputs Xn
   let inputs_x = document.querySelectorAll(".input_cant_x");
 
@@ -61,13 +79,32 @@ function preparar_datos() {
   let significancia = document.getElementById("significancia");
 
   let datos_form = {
-    Xn_json: valores_x_input,
-    u_hipotesis_json: u_hipotesis.value,
-    confianza_json: confianza.value,
-    significancia_json: significancia.value,
+    array_x_media: valores_x_input,
+    hipotesis_u: u_hipotesis.value,
+    confianza: confianza.value,
+    significancia: significancia.value,
   };
 
   console.log(datos_form);
+
+  try {
+    //enviar respuesta a python
+
+    let respuesta = await fetch("/api/calcular_t_student", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(datos_form),
+    });
+
+    if (!respuesta.ok) {
+      throw new Error("Error al procesar los datos");
+    }
+  } catch (error) {
+    //resultado.textContent = error.message;
+    alert("algo fallo amiguito");
+  }
 }
 
 function trigger_btn() {
@@ -75,9 +112,8 @@ function trigger_btn() {
   btn_calcular = document.getElementById("btn_calcular");
 
   //Declaramos listener para click
-  btn_calcular.addEventListener("click", () => {
+  btn_calcular.addEventListener("click", async () => {
     preparar_datos();
-    console.log("olaaaaa");
   });
 }
 
@@ -89,14 +125,4 @@ revisar_cant_x();
 trigger_btn();
 console.log("perico");
 preparar_datos();
-
-let check_promedio = document.getElementById("xmedia");
-console.log(check_promedio);
-
-let tmp = check_promedio.checkVisibility;
-
-if (tmp) {
-  alert("holaaa mundo");
-  console.log("si entramos");
-  console.log(tmp);
-}
+agregar_x_media();

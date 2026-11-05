@@ -67,7 +67,9 @@ def grados_libertad(array_muestras):
 
 #Esta funcion pasa de Nivel de confianza -> significancia
 def calcular_significancia(nivel_confianza):
-
+    ################################################################################
+     #OJITO CON EL *2
+     ###############################################################################
     significancia = round( ((1 - nivel_confianza)*2), 8 )
     return significancia
 
